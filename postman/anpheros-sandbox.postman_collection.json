@@ -1,0 +1,330 @@
+{
+ "info": {
+  "name": "Anpheros Platform — FHIR R4 sandbox",
+  "_postman_id": "8f1e4c52-5b0e-4f7a-9c33-2a6f1d0b7e15",
+  "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+  "description": "First calls against the free Anpheros sandbox (30 synthetic patients). Set `apiKey` to your sk_test_ key from https://platform.anpheros.com/dashboard/?src=postman, run 'List patients', copy an id into `patientId`. Synthetic data only."
+ },
+ "auth": {
+  "type": "bearer",
+  "bearer": [
+   {
+    "key": "token",
+    "value": "{{apiKey}}",
+    "type": "string"
+   }
+  ]
+ },
+ "variable": [
+  {
+   "key": "baseUrl",
+   "value": "https://platform.anpheros.com"
+  },
+  {
+   "key": "apiKey",
+   "value": "sk_test_..."
+  },
+  {
+   "key": "patientId",
+   "value": ""
+  }
+ ],
+ "item": [
+  {
+   "name": "SMART configuration",
+   "request": {
+    "method": "GET",
+    "header": [
+     {
+      "key": "Accept",
+      "value": "application/fhir+json"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/fhir/R4/.well-known/smart-configuration",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "fhir",
+      "R4",
+      ".well-known",
+      "smart-configuration"
+     ]
+    },
+    "description": "Discovery for SMART App Launch (no key needed)."
+   }
+  },
+  {
+   "name": "CapabilityStatement",
+   "request": {
+    "method": "GET",
+    "header": [
+     {
+      "key": "Accept",
+      "value": "application/fhir+json"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/fhir/R4/metadata",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "fhir",
+      "R4",
+      "metadata"
+     ]
+    },
+    "description": "What the server supports (no key needed)."
+   }
+  },
+  {
+   "name": "List patients (REST)",
+   "request": {
+    "method": "GET",
+    "header": [
+     {
+      "key": "Accept",
+      "value": "application/json"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/v1/patients?limit=10",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "v1",
+      "patients"
+     ],
+     "query": [
+      {
+       "key": "limit",
+       "value": "10"
+      }
+     ]
+    },
+    "description": "The sandbox's synthetic patients, with ids."
+   }
+  },
+  {
+   "name": "Search patients (FHIR)",
+   "request": {
+    "method": "GET",
+    "header": [
+     {
+      "key": "Accept",
+      "value": "application/fhir+json"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/fhir/R4/Patient?_count=5",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "fhir",
+      "R4",
+      "Patient"
+     ],
+     "query": [
+      {
+       "key": "_count",
+       "value": "5"
+      }
+     ]
+    },
+    "description": "FHIR search."
+   }
+  },
+  {
+   "name": "Read a patient",
+   "request": {
+    "method": "GET",
+    "header": [
+     {
+      "key": "Accept",
+      "value": "application/fhir+json"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/fhir/R4/Patient/{{patientId}}",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "fhir",
+      "R4",
+      "Patient",
+      "{{patientId}}"
+     ]
+    },
+    "description": "Read by id."
+   }
+  },
+  {
+   "name": "Lab results and vitals",
+   "request": {
+    "method": "GET",
+    "header": [
+     {
+      "key": "Accept",
+      "value": "application/fhir+json"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/fhir/R4/Observation?patient={{patientId}}&_sort=-date&_count=10",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "fhir",
+      "R4",
+      "Observation"
+     ],
+     "query": [
+      {
+       "key": "patient",
+       "value": "{{patientId}}"
+      },
+      {
+       "key": "_sort",
+       "value": "-date"
+      },
+      {
+       "key": "_count",
+       "value": "10"
+      }
+     ]
+    },
+    "description": "Latest observations of the patient."
+   }
+  },
+  {
+   "name": "Cardiology only",
+   "request": {
+    "method": "GET",
+    "header": [
+     {
+      "key": "Accept",
+      "value": "application/fhir+json"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/fhir/R4/Observation?patient={{patientId}}&specialty=cardiology",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "fhir",
+      "R4",
+      "Observation"
+     ],
+     "query": [
+      {
+       "key": "patient",
+       "value": "{{patientId}}"
+      },
+      {
+       "key": "specialty",
+       "value": "cardiology"
+      }
+     ]
+    },
+    "description": "Everything grouped under one medical specialty (computed from the codes)."
+   }
+  },
+  {
+   "name": "Write an observation",
+   "request": {
+    "method": "POST",
+    "header": [
+     {
+      "key": "Accept",
+      "value": "application/fhir+json"
+     },
+     {
+      "key": "Content-Type",
+      "value": "application/fhir+json"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/fhir/R4/Observation",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "fhir",
+      "R4",
+      "Observation"
+     ]
+    },
+    "description": "Create a heart rate (LOINC 8867-4, UCUM /min).",
+    "body": {
+     "mode": "raw",
+     "raw": "{\n  \"resourceType\": \"Observation\",\n  \"status\": \"final\",\n  \"category\": [\n    {\n      \"coding\": [\n        {\n          \"system\": \"http://terminology.hl7.org/CodeSystem/observation-category\",\n          \"code\": \"vital-signs\"\n        }\n      ]\n    }\n  ],\n  \"code\": {\n    \"coding\": [\n      {\n        \"system\": \"http://loinc.org\",\n        \"code\": \"8867-4\",\n        \"display\": \"Heart rate\"\n      }\n    ],\n    \"text\": \"Heart rate\"\n  },\n  \"subject\": {\n    \"reference\": \"Patient/{{patientId}}\"\n  },\n  \"effectiveDateTime\": \"2026-10-30T09:00:00Z\",\n  \"valueQuantity\": {\n    \"value\": 64,\n    \"unit\": \"/min\",\n    \"system\": \"http://unitsofmeasure.org\",\n    \"code\": \"/min\"\n  }\n}"
+    }
+   }
+  },
+  {
+   "name": "Patient summary (IPS)",
+   "request": {
+    "method": "GET",
+    "header": [
+     {
+      "key": "Accept",
+      "value": "application/fhir+json"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/fhir/R4/Patient/{{patientId}}/$summary",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "fhir",
+      "R4",
+      "Patient",
+      "{{patientId}}",
+      "$summary"
+     ]
+    },
+    "description": "International Patient Summary document."
+   }
+  },
+  {
+   "name": "Health terms search",
+   "request": {
+    "method": "GET",
+    "header": [
+     {
+      "key": "Accept",
+      "value": "application/json"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/v1/search?q=migraine&lang=en",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "v1",
+      "search"
+     ],
+     "query": [
+      {
+       "key": "q",
+       "value": "migraine"
+      },
+      {
+       "key": "lang",
+       "value": "en"
+      }
+     ]
+    },
+    "description": "Anpheros Search: symptoms, conditions and treatments in 20 languages, with sources."
+   }
+  }
+ ]
+}

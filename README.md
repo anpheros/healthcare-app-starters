@@ -8,6 +8,9 @@ sandbox key and you have a working app over 30 synthetic patients: patient list,
 |---|---|---|
 | [`nextjs-patient-dashboard`](nextjs-patient-dashboard) | Next.js 15 (App Router), TypeScript, `@anpheros/sdk` | a clinician-style patient dashboard; the API key stays on the server |
 | [`flutter-health-app`](flutter-health-app) | Flutter (iOS, Android, web, macOS), `anpheros_sdk` | a mobile health record app: patients, conditions, medications, labs |
+| [`smart-app-launch`](smart-app-launch) | Python 3, standard library | SMART App Launch (standalone, PKCE) and the first FHIR R4 call; [live demo](https://platform.anpheros.com/demo/smart-app-launch/) |
+
+**Postman:** [`postman/anpheros-sandbox.postman_collection.json`](postman/anpheros-sandbox.postman_collection.json) — the first ten calls, ready to run with your sandbox key.
 
 ## Quick start in 2 minutes
 
